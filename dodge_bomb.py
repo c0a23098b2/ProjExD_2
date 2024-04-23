@@ -19,10 +19,10 @@ def check_bound(obj_rct:pg.Rect) -> tuple[bool,bool]: #衝突識別関数
 
 def Draw_rect():
     """
-    surfaceの設定
-    黒い四角を描画
+    surfaceの設定 1600×900
+    黒い四角を描画 上0左0 幅1600高さ900
     半透明
-    blit
+    四角をblit
     """
     over_img = pg.Surface(( 1600, 900 ))
     pg.draw.rect(over_img, (0, 0, 0),(0, 0, 1600, 900) , 0)
