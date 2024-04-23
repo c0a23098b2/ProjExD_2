@@ -2,10 +2,12 @@ import os
 import sys
 import pygame as pg
 import random
+import time
 
 
 WIDTH, HEIGHT = 1600, 900
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+screen =pg.display.set_mode((WIDTH,HEIGHT))
 
 def check_bound(obj_rct:pg.Rect) -> tuple[bool,bool]:
     yoko, tate =True, True
@@ -15,35 +17,57 @@ def check_bound(obj_rct:pg.Rect) -> tuple[bool,bool]:
         tate = False
     return yoko, tate
 
+def Draw_rect():
+    """
+    surfaceの設定
+    黒い四角を描画
+    半透明
+    blit
+    """
+    over_img = pg.Surface(( 1600, 900 ))
+    pg.draw.rect(over_img, (0, 0, 0),(0, 0, 1600, 900) , 0)
+    over_img.set_alpha( 150 )
+    screen.blit(over_img,[0, 0])
+    print("owata")
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    #screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    kk_n = pg.transform.rotozoom(pg.image.load("fig/8.png"),0,2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
     tmr = 0
-    bd_img =pg.Surface((20,20))
+    bd_img =pg.Surface((20,20)) #爆弾
     bd_img.set_colorkey((0,0,0))
     pg.draw.circle(bd_img,(255,0,0),(10,10),10)
     bd_rct = bd_img.get_rect()
     bd_rct.center = random.randint(0,WIDTH),random.randint(0,HEIGHT)
     vx, vy = +5 , +5
-    #move = {"pg.K_UP":( 0 , -5 ),"pg.K_DOWN":( 0 , +5 ),"pg_LEFT":( -5 , 0 ),"pg._RIGHT":( +5 , 0 )}
+    toki = 0
     move = {
         pg.K_UP:(0,-5),
         pg.K_DOWN:(0,+5),
         pg.K_LEFT:(-5,0),
         pg.K_RIGHT:(+5,0)
     }
-    while True:
+    while True: #追加機能1
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-        if kk_rct.colliderect(bd_rct):
-            print("Geme over")
-            return
+        if kk_rct.colliderect( bd_rct ): #衝突
+                Draw_rect() #関数呼び出し
+                fonto = pg.font.Font(None, 100) #文字の大きさ
+                txt = fonto.render("Game over", True, (255,255,255)) #文字の描画
+                screen.blit(txt, [610,420]) #blit
+                screen.blit(kk_n, [480,380]) #こうかとんのはりつけ
+                screen.blit(kk_n, [1010,380])
+                pg.display.update() #画面の更新
+                print("Geme over")
+                time.sleep( 5 )
+                return
         
         screen.blit(bg_img, [0, 0]) 
 
@@ -56,20 +80,6 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
-        #if key_lst[pg.K_UP]:
-            #sum_mv[1] -= 5
-        #    lst = [move[pg.K_UP]]
-        #elif key_lst[pg.K_DOWN]:
-            #sum_mv[1] += 5
-        #    lst = [move["pg.K_DOWN"]]
-        #elif key_lst[pg.K_LEFT]:
-            #sum_mv[0] -= 5
-        #    lst = [move["pg.K_LEFT"]]
-        #elif key_lst[pg.K_RIGHT]:
-            #sum_mv[0] += 5
-        #    lst = [move["pg.K_RIGHT"]]
-        #else:
-        #    lst = [ 0 , 0 ]
         screen.blit(kk_img, kk_rct)
         bd_rct.move_ip(vx,vy)
         screen.blit(bd_img,bd_rct)
