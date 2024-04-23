@@ -1,6 +1,7 @@
 import os
 import sys
 import pygame as pg
+import random
 
 
 WIDTH, HEIGHT = 1600, 900
@@ -16,6 +17,12 @@ def main():
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
     tmr = 0
+    bd_img =pg.Surface((20,20))
+    bd_img.set_colorkey((0,0,0))
+    pg.draw.circle(bd_img,(255,0,0),(10,10),10)
+    bd_rct = bd_img.get_rect()
+    bd_rct.center = random.randint(0,WIDTH),random.randint(0,HEIGHT)
+    vx, vy = +5 , +5
     #move = {"pg.K_UP":( 0 , -5 ),"pg.K_DOWN":( 0 , +5 ),"pg_LEFT":( -5 , 0 ),"pg._RIGHT":( +5 , 0 )}
     move = {
         pg.K_UP:(0,-5),
@@ -51,6 +58,8 @@ def main():
         #    lst = [ 0 , 0 ]
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
+        bd_rct.move_ip(vx,vy)
+        screen.blit(bd_img,bd_rct)
         pg.display.update()
         tmr += 1
         clock.tick(50)
