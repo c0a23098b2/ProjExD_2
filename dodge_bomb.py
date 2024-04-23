@@ -16,6 +16,13 @@ def main():
     kk_rct.center = 900, 400
     clock = pg.time.Clock()
     tmr = 0
+    #move = {"pg.K_UP":( 0 , -5 ),"pg.K_DOWN":( 0 , +5 ),"pg_LEFT":( -5 , 0 ),"pg._RIGHT":( +5 , 0 )}
+    move = {
+        pg.K_UP:(0,-5),
+        pg.K_DOWN:(0,+5),
+        pg.K_LEFT:(-5,0),
+        pg.K_RIGHT:(+5,0)
+    }
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -24,14 +31,24 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
-        if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
-        if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
-        if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+        for k,v in move.items():
+            if key_lst[k]:
+                sum_mv[0] += v[0]
+                sum_mv[1] += v[1]
+        #if key_lst[pg.K_UP]:
+            #sum_mv[1] -= 5
+        #    lst = [move[pg.K_UP]]
+        #elif key_lst[pg.K_DOWN]:
+            #sum_mv[1] += 5
+        #    lst = [move["pg.K_DOWN"]]
+        #elif key_lst[pg.K_LEFT]:
+            #sum_mv[0] -= 5
+        #    lst = [move["pg.K_LEFT"]]
+        #elif key_lst[pg.K_RIGHT]:
+            #sum_mv[0] += 5
+        #    lst = [move["pg.K_RIGHT"]]
+        #else:
+        #    lst = [ 0 , 0 ]
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
